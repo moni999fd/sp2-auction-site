@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EliteAuctions | Listing</title>
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            burgundy: '#3A0336',
+            luxeBlack: '#0B0B0B',
+            surface: '#F9F9F9',
+            gold: '#C9A227',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Base styles -->
+  <link rel="stylesheet" href="./styles/base.css" />
+</head>
+
+<body class="min-h-screen">
+
+  <div class="container-panel">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="nav-header">
+      <!-- Logo -->
+      <a href="./index.html" class="flex items-center gap-2">
+        <img
+          src="./assets/EliteAuctions-LOGO.png"
+          alt="EliteAuctions logo"
+          class="h-8 w-auto"
+        />
+      </a>
+
+      <!-- Navigation -->
+      <nav class="flex items-center gap-6 text-sm">
+  <a href="./index.html" class="hover:underline font-medium">Browse</a>
+  <a href="./create-listing.html" class="hover:underline font-medium">Create Listing</a>
+
+  <!-- Dynamic auth: shows name & links to profile when logged in, Login when logged out -->
+  <a id="authLink" href="./login.html"
+     class="btn btn-outline-gold">
+    Login
+  </a>
+
+  <!-- Logout button (hidden when logged out) -->
+  <button
+    id="logoutBtn"
+    type="button"
+    class="btn btn-ghost text-xs hidden"
+  >
+    Logout
+  </button>
+
+  <!-- Credits badge -->
+  <span id="creditsBadge" class="credits-badge hidden"></span>
+</nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-wrapper p-6">
+
+      <!-- Breadcrumb / back link -->
+      <div class="mb-4 text-sm">
+        <a href="./index.html" class="text-gold hover:underline">← Back to listings</a>
+      </div>
+
+      <!-- Wrapper for listing -->
+      <section id="listingContainer" class="card">
+        <!-- listing.js will replace this content -->
+        <p class="text-sm text-gray-600">Loading listing…</p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Common UI (navbar login/logout + credits) -->
+  <script src="./js/ui.js"></script>
+  <!-- Single listing logic -->
+  <script type="module" src="./js/listing.js"></script>
+
+</body>
+</html>

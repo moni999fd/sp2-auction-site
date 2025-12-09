@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EliteAuctions | Profile</title>
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            burgundy: '#3A0336',
+            luxeBlack: '#0B0B0B',
+            surface: '#F9F9F9',
+            gold: '#C9A227',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Base styles -->
+  <link rel="stylesheet" href="./styles/base.css" />
+</head>
+
+<body class="min-h-screen">
+
+  <div class="container-panel">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="nav-header">
+      <!-- Logo -->
+      <a href="./index.html" class="flex items-center gap-2">
+        <img
+          src="./assets/EliteAuctions-LOGO.png"
+          alt="EliteAuctions logo"
+          class="h-8 w-auto"
+        />
+      </a>
+
+      <!-- Navigation -->
+     <nav class="flex items-center gap-6 text-sm">
+  <a href="./index.html" class="hover:underline font-medium">Browse</a>
+  <a href="./create-listing.html" class="hover:underline font-medium">Create Listing</a>
+
+  <!-- Dynamic auth: shows name & links to profile when logged in, Login when logged out -->
+  <a id="authLink" href="./login.html"
+     class="btn btn-outline-gold">
+    Login
+  </a>
+
+  <!-- Logout button (hidden when logged out) -->
+  <button
+    id="logoutBtn"
+    type="button"
+    class="btn btn-ghost text-xs hidden"
+  >
+    Logout
+  </button>
+
+  <!-- Credits badge -->
+  <span id="creditsBadge" class="credits-badge hidden"></span>
+</nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-wrapper p-6 space-y-6">
+
+      <!-- PROFILE HEADER -->
+      <section id="profileHeader" class="card">
+        <p class="text-sm text-gray-600">Loading profile…</p>
+      </section>
+
+      <!-- PROFILE EDIT SECTION -->
+<section class="mt-6">
+  <div class="card">
+    <h2 class="text-lg font-semibold mb-2">Edit profile</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Update your bio, avatar and banner. Image URLs must be full links (https://…)
+      to publicly accessible images.
+    </p>
+
+    <form id="profileEditForm" class="space-y-4">
+      <!-- Bio -->
+      <div>
+        <label for="profileBio" class="block text-sm font-medium mb-1">
+          Bio
+        </label>
+        <textarea
+          id="profileBio"
+          name="profileBio"
+          class="input min-h-[80px]"
+          placeholder="Tell the world about your auction style…"
+        ></textarea>
+      </div>
+
+      <!-- Avatar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="avatarUrl" class="block text-sm font-medium mb-1">
+            Avatar URL
+          </label>
+          <input
+            id="avatarUrl"
+            name="avatarUrl"
+            type="url"
+            class="input"
+            placeholder="https://example.com/avatar.jpg"
+          />
+        </div>
+        <div>
+          <label for="avatarAlt" class="block text-sm font-medium mb-1">
+            Avatar alt text
+          </label>
+          <input
+            id="avatarAlt"
+            name="avatarAlt"
+            type="text"
+            class="input"
+            placeholder="Short description of your avatar"
+          />
+        </div>
+      </div>
+
+      <!-- Banner -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="bannerUrl" class="block text-sm font-medium mb-1">
+            Banner URL
+          </label>
+          <input
+            id="bannerUrl"
+            name="bannerUrl"
+            type="url"
+            class="input"
+            placeholder="https://example.com/banner.jpg"
+          />
+        </div>
+        <div>
+          <label for="bannerAlt" class="block text-sm font-medium mb-1">
+            Banner alt text
+          </label>
+          <input
+            id="bannerAlt"
+            name="bannerAlt"
+            type="text"
+            class="input"
+            placeholder="Short description of your banner"
+          />
+        </div>
+      </div>
+
+      <p id="profileEditError" class="text-xs text-red-700"></p>
+      <p id="profileEditSuccess" class="text-xs text-green-700 hidden"></p>
+
+      <button type="submit" class="btn btn-primary text-sm">
+        Save profile changes
+      </button>
+    </form>
+  </div>
+</section>
+
+      <!-- MY LISTINGS -->
+      <section class="card">
+        <header class="flex items-center justify-between mb-3">
+          <h2 class="text-lg font-semibold">My Listings</h2>
+        </header>
+        <div id="myListingsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <p class="text-sm text-gray-600">Loading listings…</p>
+        </div>
+      </section>
+
+      <!-- MY BIDS -->
+      <section class="card">
+        <header class="flex items-center justify-between mb-3">
+          <h2 class="text-lg font-semibold">Listings I’ve Bid On</h2>
+        </header>
+        <div id="myBidsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <p class="text-sm text-gray-600">Loading bids…</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Common UI (navbar login/logout + credits) -->
+  <script src="./js/ui.js"></script>
+  <!-- Profile logic -->
+  <script type="module" src="./js/profile.js"></script>
+
+</body>
+</html>

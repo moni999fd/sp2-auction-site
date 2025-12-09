@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EliteAuctions | Create Listing</title>
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            burgundy: '#3A0336',
+            luxeBlack: '#0B0B0B',
+            surface: '#F9F9F9',
+            gold: '#C9A227',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Base styles -->
+  <link rel="stylesheet" href="./styles/base.css" />
+</head>
+
+<body class="min-h-screen">
+  <div class="container-panel">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="nav-header">
+      <!-- Logo -->
+      <a href="./index.html" class="flex items-center gap-2">
+        <img
+          src="./assets/EliteAuctions-LOGO.png"
+          alt="EliteAuctions logo"
+          class="h-8 w-auto"
+        />
+      </a>
+
+      <!-- Navigation -->
+     <nav class="flex items-center gap-6 text-sm">
+  <a href="./index.html" class="hover:underline font-medium">Browse</a>
+  <a href="./create-listing.html" class="hover:underline font-medium">Create Listing</a>
+
+  <!-- Dynamic auth: shows name & links to profile when logged in, Login when logged out -->
+  <a id="authLink" href="./login.html"
+     class="btn btn-outline-gold">
+    Login
+  </a>
+
+  <!-- Logout button (hidden when logged out) -->
+  <button
+    id="logoutBtn"
+    type="button"
+    class="btn btn-ghost text-xs hidden"
+  >
+    Logout
+  </button>
+
+  <!-- Credits badge -->
+  <span id="creditsBadge" class="credits-badge hidden"></span>
+</nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-wrapper p-6 flex justify-center">
+      <section class="card w-full max-w-2xl">
+        <h1 class="text-2xl font-bold mb-2">Create new listing</h1>
+        <p class="text-sm text-gray-600 mb-4">
+          Fill in the details below to create a new auction listing.
+        </p>
+
+        <form id="createListingForm" class="space-y-4" novalidate>
+          <!-- Title -->
+          <div>
+            <label for="title" class="block text-sm font-medium mb-1">
+              Title <span class="text-red-600">*</span>
+            </label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              class="input"
+              required
+              placeholder="e.g. Vintage gold pocket watch"
+            />
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label for="description" class="block text-sm font-medium mb-1">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              class="input min-h-[120px]"
+              placeholder="Describe the item, condition, and any special details."
+            ></textarea>
+          </div>
+
+          <!-- Tags -->
+          <div>
+            <label for="tags" class="block text-sm font-medium mb-1">
+              Tags (optional)
+            </label>
+            <input
+              id="tags"
+              name="tags"
+              type="text"
+              class="input"
+              placeholder="e.g. luxury,watch,vintage"
+            />
+            <p class="text-xs text-gray-500 mt-1">
+              Separate tags with commas. Example: <code>art,painting,modern</code>
+            </p>
+          </div>
+
+          <!-- Media -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="mediaUrl" class="block text-sm font-medium mb-1">
+                Main image URL (optional)
+              </label>
+              <input
+                id="mediaUrl"
+                name="mediaUrl"
+                type="url"
+                class="input"
+                placeholder="https://example.com/image.jpg"
+              />
+              <p class="text-xs text-gray-500 mt-1">
+                Must be a fully public image URL or the API will reject it.
+              </p>
+            </div>
+            <div>
+              <label for="mediaAlt" class="block text-sm font-medium mb-1">
+                Image description (alt text)
+              </label>
+              <input
+                id="mediaAlt"
+                name="mediaAlt"
+                type="text"
+                class="input"
+                placeholder="Describe the image for accessibility"
+              />
+            </div>
+          </div>
+
+          <!-- EndsAt -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="endDate" class="block text-sm font-medium mb-1">
+                End date <span class="text-red-600">*</span>
+              </label>
+              <input
+                id="endDate"
+                name="endDate"
+                type="date"
+                class="input"
+                required
+              />
+            </div>
+            <div>
+              <label for="endTime" class="block text-sm font-medium mb-1">
+                End time <span class="text-red-600">*</span>
+              </label>
+              <input
+                id="endTime"
+                name="endTime"
+                type="time"
+                class="input"
+                required
+              />
+              <p class="text-xs text-gray-500 mt-1">
+                Local time. The system will convert it to UTC for the API.
+              </p>
+            </div>
+          </div>
+
+          <!-- Error & success messages -->
+          <p id="createError" class="text-sm text-red-700 mt-1"></p>
+          <p id="createSuccess" class="text-sm text-green-700 mt-1 hidden"></p>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn-primary w-full mt-2">
+            Create listing
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <!-- Common UI -->
+  <script src="./js/ui.js"></script>
+  <!-- Create listing logic -->
+  <script type="module" src="./js/create-listing.js"></script>
+</body>
+</html>
