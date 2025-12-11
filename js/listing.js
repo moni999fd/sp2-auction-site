@@ -35,41 +35,6 @@ function formatDateTime(iso) {
 }
 
 /**
- * Turn ISO string into { date: "YYYY-MM-DD", time: "HH:MM" } in local time
- */
-function splitIsoToDateTime(iso) {
-  if (!iso) return { date: "", time: "" };
-  try {
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return { date: "", time: "" };
-
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    const hh = String(d.getHours()).padStart(2, "0");
-    const min = String(d.getMinutes()).padStart(2, "0");
-
-    return {
-      date: `${yyyy}-${mm}-${dd}`,
-      time: `${hh}:${min}`,
-    };
-  } catch {
-    return { date: "", time: "" };
-  }
-}
-
-/**
- * Build ISO string from date + time inputs (local → ISO)
- */
-function buildEndsAtIso(dateValue, timeValue) {
-  if (!dateValue || !timeValue) return null;
-  const dateTimeString = `${dateValue}T${timeValue}`;
-  const localDate = new Date(dateTimeString);
-  if (Number.isNaN(localDate.getTime())) return null;
-  return localDate.toISOString();
-}
-
-/**
  * Safely get media array (or [])
  */
 function getMediaArray(media) {
@@ -98,7 +63,7 @@ function renderMediaGallery(mediaArray) {
       alt="${main.alt || ""}"
       class="w-full h-64 object-cover rounded-2xl mb-3"
     />
-  `;
+  ";
 
   if (!thumbs.length) {
     return mainImg;
@@ -217,7 +182,7 @@ function renderListing(listing) {
   const userCredits =
     typeof currentUser?.credits === "number" ? currentUser.credits : null;
 
-  // Seller-only controls
+  // Seller-only controls (no endsAt editing – API doesn't support it)
   const sellerControls = seller
     ? `
       <div class="flex flex-wrap gap-2 mt-3">
@@ -232,6 +197,10 @@ function renderListing(listing) {
       <section id="editListingSection" class="mt-4 hidden">
         <div class="border border-gray-200 rounded-xl p-3 bg-gray-50">
           <h2 class="text-sm font-semibold mb-2">Edit listing</h2>
+          <p class="text-xs text-gray-500 mb-2">
+            You can update the title, description and image. 
+            The auction end time is fixed and cannot be changed (API limitation).
+          </p>
           <form id="editListingForm" class="space-y-3 text-sm">
             <div>
               <label for="editTitle" class="block font-medium mb-1">Title</label>
@@ -268,28 +237,6 @@ function renderListing(listing) {
                   name="editMediaAlt"
                   type="text"
                   class="input"
-                />
-              </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <label for="editEndDate" class="block font-medium mb-1">End date</label>
-                <input
-                  id="editEndDate"
-                  name="editEndDate"
-                  type="date"
-                  class="input"
-                  required
-                />
-              </div>
-              <div>
-                <label for="editEndTime" class="block font-medium mb-1">End time</label>
-                <input
-                  id="editEndTime"
-                  name="editEndTime"
-                  type="time"
-                  class="input"
-                  required
                 />
               </div>
             </div>
@@ -445,8 +392,6 @@ function setupEditAndDeleteHandlers(listing) {
   const editDescription = document.getElementById("editDescription");
   const editMediaUrl = document.getElementById("editMediaUrl");
   const editMediaAlt = document.getElementById("editMediaAlt");
-  const editEndDate = document.getElementById("editEndDate");
-  const editEndTime = document.getElementById("editEndTime");
   const editError = document.getElementById("editError");
   const editSuccess = document.getElementById("editSuccess");
 
@@ -455,14 +400,11 @@ function setupEditAndDeleteHandlers(listing) {
   // Pre-fill edit form with current listing data
   const mainMedia =
     Array.isArray(listing.media) && listing.media[0] ? listing.media[0] : null;
-  const { date, time } = splitIsoToDateTime(listing.endsAt);
 
   if (editTitle) editTitle.value = listing.title || "";
   if (editDescription) editDescription.value = listing.description || "";
   if (editMediaUrl) editMediaUrl.value = mainMedia?.url || "";
   if (editMediaAlt) editMediaAlt.value = mainMedia?.alt || "";
-  if (editEndDate) editEndDate.value = date;
-  if (editEndTime) editEndTime.value = time;
 
   // Toggle edit section
   editBtn.addEventListener("click", () => {
@@ -503,33 +445,21 @@ function setupEditAndDeleteHandlers(listing) {
     const newDesc = editDescription?.value.trim();
     const newMediaUrl = editMediaUrl?.value.trim();
     const newMediaAlt = editMediaAlt?.value.trim();
-    const newEndDate = editEndDate?.value;
-    const newEndTime = editEndTime?.value;
 
     if (!newTitle) {
       editError.textContent = "Title is required.";
       return;
     }
 
-    const endsAtIso = buildEndsAtIso(newEndDate, newEndTime);
-    if (!endsAtIso) {
-      editError.textContent = "Please provide a valid end date and time.";
-      return;
-    }
-
-    const now = new Date();
-    const endsAtDate = new Date(endsAtIso);
-    if (endsAtDate <= now) {
-      editError.textContent = "End time must be in the future.";
-      return;
-    }
-
     const payload = {
       title: newTitle,
       description: newDesc || "",
-      media: buildMedia(newMediaUrl, newMediaAlt),
-      endsAt: endsAtIso,
     };
+
+    const media = buildMedia(newMediaUrl, newMediaAlt);
+    if (media.length) {
+      payload.media = media;
+    }
 
     try {
       const updated = await apiFetch(
