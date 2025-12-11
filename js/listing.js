@@ -63,7 +63,7 @@ function renderMediaGallery(mediaArray) {
       alt="${main.alt || ""}"
       class="w-full h-64 object-cover rounded-2xl mb-3"
     />
-  ";
+  `;
 
   if (!thumbs.length) {
     return mainImg;
@@ -153,7 +153,8 @@ function getHighestBidAmount(listing) {
   const bids = Array.isArray(listing.bids) ? listing.bids : [];
   if (!bids.length) return 0;
   return bids.reduce(
-    (max, b) => (typeof b.amount === "number" && b.amount > max ? b.amount : max),
+    (max, b) =>
+      typeof b.amount === "number" && b.amount > max ? b.amount : max,
     0
   );
 }
