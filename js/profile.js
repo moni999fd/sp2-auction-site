@@ -141,8 +141,8 @@ function renderProfileHeader(profile) {
       name: profile.name,
       email: profile.email,
       credits: profile.credits,
-      avatar: avatarUrl,   // ✅ store the final URL
-      banner: bannerUrl,   // ✅ store the final URL
+      avatar: avatarUrl,   //  store the final URL
+      banner: bannerUrl,   //  store the final URL
       bio: profile.bio,
     };
     localStorage.setItem("user", JSON.stringify(updated));
